@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>Double.ico</file>
+        <file>return.ico</file>
+    </qresource>
+</RCC>
