@@ -169,7 +169,7 @@ void MainWindow::on_saveDataButton_clicked()
 {
     QMessageBox msgBox;
     msgBox.setText("The SQL will modified.");
-    msgBox.setInformativeText("你确定要保存数据吗?");
+    msgBox.setInformativeText("你确定要保存数据吗 ?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
     if(msgBox.exec() != QMessageBox::Save)
