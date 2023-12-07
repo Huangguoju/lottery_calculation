@@ -23,7 +23,6 @@ public:
     void initdata();
     void refresh();
 private slots:
-    void on_lineEdit_returnPressed();
 
     void on_lineEdit_2_returnPressed();
 
@@ -42,21 +41,48 @@ private slots:
 
     void on_primalQueryButton_clicked();
 
+    void on_lineEditRed1_returnPressed();
+
+    void on_lineEditRed2_returnPressed();
+
+    void on_lineEditRed3_returnPressed();
+
+    void on_lineEditRed4_returnPressed();
+
+    void on_lineEditRed5_returnPressed();
+
+    void on_lineEditRed6_returnPressed();
+
+    void on_primalImportButton_clicked();
+
+    void on_lineEditRed1_textEdited(const QString &arg1);
+
+    void on_lineEditRed2_textEdited(const QString &arg1);
+
+    void on_lineEditRed3_textEdited(const QString &arg1);
+
+    void on_lineEditRed4_textEdited(const QString &arg1);
+
+    void on_lineEditRed5_textEdited(const QString &arg1);
+
+    void on_lineEditRed6_textEdited(const QString &arg1);
+
+    void on_lineEdit_2_textEdited(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     QList<QLabel *> QLabel_Red_list;
     QList<QLabel *> QLabel_Blue_list;
     int red_count[33];
     int blue_count[16];
-    int last_num;
-    int last_isRed;
+
     int input_count;
     QSqlDatabase db;
     QDate curDate;
-    int primal_red[128];
-    int primal_blue[128];
-    int primalRedCount;
-    int primalBlueCount;
+    int primal_red[7];
+    int primal_blue;
+    int primalRedCount;//红球输入数
+    int primalBlueCount;//蓝球输入数
 
 };
 

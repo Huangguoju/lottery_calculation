@@ -51,8 +51,18 @@ void MainWindow::init()
 
     QRegExp regx("[0-9]+$");
     QValidator *validator;
-    validator = new QRegExpValidator(regx, ui->lineEdit );
-    ui->lineEdit->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed1 );
+    ui->lineEditRed1->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed2 );
+    ui->lineEditRed2->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed3 );
+    ui->lineEditRed3->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed4 );
+    ui->lineEditRed4->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed5 );
+    ui->lineEditRed5->setValidator( validator );
+    validator = new QRegExpValidator(regx, ui->lineEditRed6 );
+    ui->lineEditRed6->setValidator( validator );
 
     validator = new QRegExpValidator(regx, ui->lineEdit_2 );
     ui->lineEdit_2->setValidator( validator );
@@ -72,13 +82,15 @@ void MainWindow::init()
 
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setHostName("acidalia");
-    db.setDatabaseName("custom.db");
+    remove("custom.db");
+    db.setDatabaseName("custom1.db");
     db.setUserName("admin");
     db.setPassword("123");
     db.open();
 
     QSqlQuery query;
     //query.exec(clear_sql);
+#if 0
     query.exec("CREATE TABLE IF NOT EXISTS lottery(       \
         ID INTEGER PRIMARY KEY  NOT NULL,   \
         NUM                     INTEGER,    \
@@ -86,9 +98,9 @@ void MainWindow::init()
         COLOR                   TEXT,       \
         INPUT_COUNT             INTEGER,     \
         RECORD_DATE             TEXT    );");
-
-    query.exec("CREATE TABLE IF NOT EXISTS primal_data(       \
-        ID INTEGER PRIMARY KEY  NOT NULL,   \
+#endif
+    query.exec("CREATE TABLE IF NOT EXISTS lottery(       \
+        id INTEGER PRIMARY KEY  AUTOINCREMENT,   \
         RED_ONE                 INTEGER,    \
         RED_TWO                 INTEGER,    \
         RED_THREE               INTEGER,    \
@@ -96,8 +108,8 @@ void MainWindow::init()
         RED_FIVE                INTEGER,    \
         RED_SIX                 INTEGER,    \
         BLUE                    INTEGER,    \
-        INPUT_COUNT             INTEGER,     \
-        RECORD_DATE             TEXT    );");
+        RECORD_DATE             TEXT,   \
+        CUR_TIME                TEXT    );");
 }
 
 void MainWindow::initdata()
@@ -117,10 +129,15 @@ void MainWindow::initdata()
         blue_count[i] = 0;
     }
 
-    ui->label_last_num->setText("0");
-    last_num = 0;
+    ui->label_last_red1->setText("0");
+    ui->label_last_red2->setText("0");
+    ui->label_last_red3->setText("0");
+    ui->label_last_red4->setText("0");
+    ui->label_last_red5->setText("0");
+    ui->label_last_red6->setText("0");
+    ui->label_last_blue->setText("0");
 
-    ui->comboBox->setCurrentIndex(0);
+    ui->comboBoxMachineOrWin->setCurrentIndex(0);
 
     input_count = 0;
 
@@ -131,13 +148,8 @@ void MainWindow::initdata()
 
     refresh();
 
-
-
-    memset(primal_red, 0, 128);
-    memset(primal_blue, 0, 128);
-    primalRedCount = 0;
-    primalBlueCount = 0;
-
+    memset(primal_red, 0, sizeof(primal_red));
+    primal_blue = 0;
 #if 0
 
     QSqlTableModel *model = new QSqlTableModel(this, db);
@@ -167,6 +179,8 @@ void MainWindow::initdata()
 //保存数据
 void MainWindow::on_saveDataButton_clicked()
 {
+#if 0
+
     QMessageBox msgBox;
     msgBox.setText("The SQL will modified.");
     msgBox.setInformativeText("你确定要保存数据吗 ?");
@@ -204,6 +218,7 @@ void MainWindow::on_saveDataButton_clicked()
     msgBox1.setText("数据保存成功 !!!.  ");
     msgBox1.exec();
     initdata();
+#endif
 }
 
 //查询数据
@@ -226,11 +241,7 @@ void MainWindow::on_queryDataButton_clicked()
         blue_count[i] = 0;
     }
     input_count = 0;
-    ui->label_last_num_3->setNum(input_count);
-    ui->label_last_num_4->setNum(input_count/7);
-
-    int num, num_count, input_count_sql = 0;
-    int isNextRecord = 0;
+    ui->label_last_num_4->setNum(0);
 
     QString selectStr;
     if(ui->checkBox->isChecked())
@@ -239,37 +250,48 @@ void MainWindow::on_queryDataButton_clicked()
         selectStr = QString("select * from lottery where RECORD_DATE ='%1'").arg(startDate);
 
     QSqlQuery query(selectStr);
+    int num = 0;
 
     //QSqlQuery query("select * from lottery");//查询表的内容
     //QSqlRecord record = query.record();
-
     //ID, NUM(1), NUM_COUNT, COLOR, INPUT_COUNT, RECORD_DATE(5)
+    //0-ID, 1-RED_ONE ..... 7-BLUE,RECORD_DATE,CUR_TIME
     while (query.next()) {
 
+        //qDebug() << query.value(1).toInt() << query.value(2).toInt() << query.value(3).toInt() << query.value(4).toInt();
+
         num = query.value(1).toInt();
-        num_count = query.value(2).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
 
-        if(query.value(3).toString() == "red"){
-            red_count[num] += num_count;
-            QLabel_Red_list[num]->setNum(red_count[num]);
+        num = query.value(2).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
 
-        } else {
-            blue_count[num] += num_count;
-            QLabel_Blue_list[num]->setNum(blue_count[num]);
-        }
+        num = query.value(3).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
 
-        if(isNextRecord == 0){
-            input_count_sql = query.value(4).toInt();
-            input_count += input_count_sql;
-            ui->label_last_num_3->setNum(input_count);
-            ui->label_last_num_4->setNum(input_count/7);
-        }
-        isNextRecord++;
-        if(isNextRecord > 49)
-        {
-            isNextRecord = 0;
+        num = query.value(4).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
 
-        }
+        num = query.value(5).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
+
+        num = query.value(6).toInt();
+        red_count[num-1] += 1;
+        QLabel_Red_list[num-1]->setNum(red_count[num-1]);
+
+        num = query.value(7).toInt();
+        blue_count[num-1] += 1;
+        QLabel_Blue_list[num-1]->setNum(blue_count[num-1]);
+
+        input_count += 7;
+
+        ui->label_last_num_4->setNum(input_count/7);
+
         //qDebug() << column << num_count << color << date;
 
     }
@@ -283,7 +305,6 @@ void MainWindow::refresh()
 {
 
     for(int i = 0; i < 33; i++){
-
         QString num = QString("%1").arg(red_count[i]);
         QLabel_Red_list[i]->setText(num);
     }
@@ -293,93 +314,236 @@ void MainWindow::refresh()
         QLabel_Blue_list[i]->setText(num);
     }
 
-    ui->label_last_num_3->setNum(input_count);
     ui->label_last_num_4->setNum(input_count/7);
 
 }
 
-//red  1  - 33
-void MainWindow::on_lineEdit_returnPressed()
+void MainWindow::on_lineEditRed1_returnPressed()
 {
-
-    if(ui->lineEdit->text().length() != 2){
+    if(ui->lineEditRed1->text().length() != 2){
         QMessageBox mesbox;
         mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
         mesbox.exec();
+        ui->lineEditRed1->clear();
         return;
     }
-    int linenum = ui->lineEdit->text().toInt();
+    int linenum = ui->lineEditRed1->text().toInt();
     if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed1->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
         return;
-    ui->lineEdit->clear();
+    }
+
+    int primalRedCur = 0;
 
     input_count += 1;
-    if(ui->comboBox->currentIndex() == 0){
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
         red_count[linenum-1] += 1;
 
-        last_num = linenum;
-        last_isRed = 0;
-        ui->label_last_num->setNum(last_num);
-        QString s1 =QString::fromUtf8("（红球）");
-        ui->label_last_num_2->setText(s1);
+        // 输入源数据
+        primal_red[primalRedCur] = linenum;
+    } else {
+        //输入当期中奖号码
+        QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
+    }
+    ui->lineEditRed2->setFocus();
+    ui->lineEditRed2->clear();
+
+    refresh();
+}
+
+void MainWindow::on_lineEditRed2_returnPressed()
+{
+    if(ui->lineEditRed2->text().length() != 2){
+        QMessageBox mesbox;
+        mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
+        mesbox.exec();
+        ui->lineEditRed2->clear();
+        return;
+    }
+    int linenum = ui->lineEditRed2->text().toInt();
+    if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed2->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
+        return;
+    }
+
+    int primalRedCur = 1;
+
+    input_count += 1;
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
+        red_count[linenum-1] += 1;
 
         // 输入源数据
-        primal_red[primalRedCount] = linenum;
-        primalRedCount++;
-
-        if(primalRedCount + primalBlueCount == 35){
-            //qDebug() << "primalRedCount + primalRedCount" << primalRedCount + primalBlueCount ;
-            QDate date = ui->dateEdit->date();
-            QString datestr = date.toString("yyyy-MM-dd");
-            QSqlQuery query;
-            int blue_tmp = 0;
-            db.transaction();
-            for(int i = 0; i < 30; ){
-
-                query.prepare("INSERT INTO primal_data (RED_ONE, RED_TWO, RED_THREE, RED_FOUR, RED_FIVE, RED_SIX, BLUE, INPUT_COUNT, RECORD_DATE) "
-                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_blue[blue_tmp++]);
-                query.addBindValue(input_count);
-                query.addBindValue(datestr);
-
-                query.exec();
-            }
-            db.commit();
-            memset(primal_red, 0, 128);
-            memset(primal_blue, 0, 128);
-            primalRedCount = 0;
-            primalBlueCount = 0;
-        }
+        primal_red[primalRedCur] = linenum;
 
     } else {
         //输入当期中奖号码
         QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
-
-        last_num = linenum;
-        last_isRed = 0;
-        ui->label_last_num->setNum(last_num);
-        QString s1 =QString::fromUtf8("（红球）");
-        ui->label_last_num_2->setText(s1);
     }
+    ui->lineEditRed3->setFocus();
+    ui->lineEditRed3->clear();
+
     refresh();
-
-
-#if 0
-    QMessageBox msgBox;
-     msgBox.setText("The document has been modified.");
-     msgBox.setInformativeText("Do you want to save your changes?");
-     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-     msgBox.setDefaultButton(QMessageBox::Save);
-     int ret = msgBox.exec();
-#endif
-
 }
+
+void MainWindow::on_lineEditRed3_returnPressed()
+{
+    if(ui->lineEditRed3->text().length() != 2){
+        QMessageBox mesbox;
+        mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
+        mesbox.exec();
+        ui->lineEditRed3->clear();
+        return;
+    }
+    int linenum = ui->lineEditRed3->text().toInt();
+    if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed3->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
+        return;
+    }
+
+    int primalRedCur = 2;
+
+    input_count += 1;
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
+        red_count[linenum-1] += 1;
+
+        // 输入源数据
+        primal_red[primalRedCur] = linenum;
+
+    } else {
+        //输入当期中奖号码
+        QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
+    }
+    ui->lineEditRed4->setFocus();
+    ui->lineEditRed4->clear();
+
+    refresh();
+}
+
+void MainWindow::on_lineEditRed4_returnPressed()
+{
+    if(ui->lineEditRed4->text().length() != 2){
+        QMessageBox mesbox;
+        mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
+        mesbox.exec();
+        ui->lineEditRed4->clear();
+        return;
+    }
+    int linenum = ui->lineEditRed4->text().toInt();
+    if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed4->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
+        return;
+    }
+
+    int primalRedCur = 3;
+
+    input_count += 1;
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
+        red_count[linenum-1] += 1;
+
+        // 输入源数据
+        primal_red[primalRedCur] = linenum;
+
+    } else {
+        //输入当期中奖号码
+        QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
+    }
+    ui->lineEditRed5->setFocus();
+    ui->lineEditRed5->clear();
+
+    refresh();
+}
+
+void MainWindow::on_lineEditRed5_returnPressed()
+{
+    if(ui->lineEditRed5->text().length() != 2){
+        QMessageBox mesbox;
+        mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
+        mesbox.exec();
+        ui->lineEditRed5->clear();
+        return;
+    }
+    int linenum = ui->lineEditRed5->text().toInt();
+    if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed5->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
+        return;
+    }
+
+    int primalRedCur = 4;
+
+    input_count += 1;
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
+        red_count[linenum-1] += 1;
+
+        // 输入源数据
+        primal_red[primalRedCur] = linenum;
+
+    } else {
+        //输入当期中奖号码
+        QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
+    }
+    ui->lineEditRed6->setFocus();
+    ui->lineEditRed6->clear();
+
+    refresh();
+}
+
+void MainWindow::on_lineEditRed6_returnPressed()
+{
+    if(ui->lineEditRed6->text().length() != 2){
+        QMessageBox mesbox;
+        mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
+        mesbox.exec();
+        ui->lineEditRed6->clear();
+        return;
+    }
+    int linenum = ui->lineEditRed6->text().toInt();
+    if(linenum > 33 || linenum <= 0)
+    {
+        ui->lineEditRed6->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到33");
+        mesbox.exec();
+        return;
+    }
+
+    int primalRedCur = 5;
+
+    input_count += 1;
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
+        red_count[linenum-1] += 1;
+
+        // 输入源数据
+        primal_red[primalRedCur] = linenum;
+    } else {
+        //输入当期中奖号码
+        QLabel_Red_list[linenum - 1]->setStyleSheet("color:red;");
+    }
+    ui->lineEdit_2->setFocus();
+    ui->lineEdit_2->clear();
+
+    refresh();
+}
+
 
 //blue  1 - 16
 void MainWindow::on_lineEdit_2_returnPressed()
@@ -388,73 +552,89 @@ void MainWindow::on_lineEdit_2_returnPressed()
         QMessageBox mesbox;
         mesbox.setText("长度必须为 2 ，请检查长度，如：02（正确），2（错误） !!!");
         mesbox.exec();
+        ui->lineEdit_2->clear();
         return;
     }
     int linenum = ui->lineEdit_2->text().toInt();
     if(linenum > 16 || linenum <= 0)
+    {
+        ui->lineEdit_2->clear();
+        QMessageBox mesbox;
+        mesbox.setText("数值必须为1到16");
+        mesbox.exec();
         return;
+    }
+
     ui->lineEdit_2->clear();
+
+    // 输入源数据
+    primal_blue = linenum;
 
     input_count += 1;
 
-    if(ui->comboBox->currentIndex() == 0){
+    if(ui->comboBoxMachineOrWin->currentIndex() == 0){
 
         blue_count[linenum-1] += 1;
 
-        last_num = linenum;
-        last_isRed = 1;
-        ui->label_last_num->setNum(last_num);
-        QString s1 =QString::fromUtf8("（蓝球）");
-        ui->label_last_num_2->setText(s1);
+        ui->label_last_red1->setNum(primal_red[0]);
+        ui->label_last_red2->setNum(primal_red[1]);
+        ui->label_last_red3->setNum(primal_red[2]);
+        ui->label_last_red4->setNum(primal_red[3]);
+        ui->label_last_red5->setNum(primal_red[4]);
+        ui->label_last_red6->setNum(primal_red[5]);
+        ui->label_last_blue->setNum(primal_blue);
 
-        // 输入源数据
-        primal_blue[primalBlueCount] = linenum;
-        primalBlueCount++;
+        //qDebug() << "primalRedCount + primalRedCount" << primalRedCount + primalBlueCount ;
+        QDate date = ui->dateEdit->date();
+        QString datestr = date.toString("yyyy-MM-dd");
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+        QString timestr = currentDateTime.toString("yyyy-MM-dd hh:mm:ss");
 
-        if(primalRedCount + primalBlueCount == 35){
-            //qDebug() << "primalRedCount + primalRedCount" << primalRedCount + primalBlueCount ;
-            QDate date = ui->dateEdit->date();
-            QString datestr = date.toString("yyyy-MM-dd");
-            QSqlQuery query;
-            int blue_tmp = 0;
-            //QTime    tmpTime;
-            //tmpTime.start();
-            db.transaction();
-            for(int i = 0; i < 30; ){
+        QSqlQuery query;
+        QTime    tmpTime;
+        tmpTime.start();
+        db.transaction();
 
-                query.prepare("INSERT INTO primal_data (RED_ONE, RED_TWO, RED_THREE, RED_FOUR, RED_FIVE, RED_SIX, BLUE, INPUT_COUNT, RECORD_DATE) "
-                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_red[i++]);
-                query.addBindValue(primal_blue[blue_tmp++]);
-                query.addBindValue(input_count);
-                query.addBindValue(datestr);
+        query.prepare("INSERT INTO lottery (RED_ONE, RED_TWO, RED_THREE, RED_FOUR, RED_FIVE, RED_SIX, BLUE, RECORD_DATE, CUR_TIME) "
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        query.addBindValue(primal_red[0]);
+        query.addBindValue(primal_red[1]);
+        query.addBindValue(primal_red[2]);
+        query.addBindValue(primal_red[3]);
+        query.addBindValue(primal_red[4]);
+        query.addBindValue(primal_red[5]);
+        query.addBindValue(primal_blue);
+        query.addBindValue(datestr);
+        query.addBindValue(timestr);
 
-                query.exec();
-            }
-            db.commit();
-            //qDebug() <<"10000条数据耗时："<<tmpTime.elapsed()<<"ms"<<endl;
-            memset(primal_red, 0, 128);
-            memset(primal_blue, 0, 128);
-            primalRedCount = 0;
-            primalBlueCount = 0;
-        }
+        query.exec();
+
+        db.commit();
+        //qDebug() <<"10000条数据耗时："<<tmpTime.elapsed()<<"ms"<<endl;
+        memset(primal_red, 0, sizeof(primal_red));
+        primal_blue = 0;
+
+        ui->lineEditRed1->clear();
+        ui->lineEditRed2->clear();
+        ui->lineEditRed3->clear();
+        ui->lineEditRed4->clear();
+        ui->lineEditRed5->clear();
+        ui->lineEditRed6->clear();
     }
     else
     {
         //输入当期中奖号码
         QLabel_Blue_list[linenum - 1]->setStyleSheet("color:red;");
 
-        last_num = linenum;
-        last_isRed = 1;
-        ui->label_last_num->setNum(last_num);
-        QString s1 =QString::fromUtf8("（蓝球）");
-        ui->label_last_num_2->setText(s1);
+        ui->label_last_red1->setNum(primal_red[0]);
+        ui->label_last_red2->setNum(primal_red[1]);
+        ui->label_last_red3->setNum(primal_red[2]);
+        ui->label_last_red4->setNum(primal_red[3]);
+        ui->label_last_red5->setNum(primal_red[4]);
+        ui->label_last_red6->setNum(primal_red[5]);
+        ui->label_last_blue->setNum(primal_blue);
     }
+    ui->lineEditRed1->setFocus();
 
     refresh();
 
@@ -464,21 +644,19 @@ void MainWindow::on_lineEdit_2_returnPressed()
 
 void MainWindow::on_revocationButton_clicked()
 {
-    if(last_isRed == 2)
+#if 0
+    if(last_isBlue == 2)
         return;
-    if(last_isRed == 0){
+    if(last_isBlue == 0){
         red_count[last_num-1] -= 1;
-        primalRedCount -= 1;
-    } else if (last_isRed == 1){
+    } else if (last_isBlue == 1){
         blue_count[last_num-1] -= 1;
-        primalBlueCount -= 1;
     }
-    input_count -= 1;
-    last_isRed = 2;
+    last_isBlue = 2;
 
 
     refresh();
-
+#endif
 }
 
 void MainWindow::on_reInitButton_clicked()
@@ -526,21 +704,22 @@ void MainWindow::on_primalQueryButton_clicked()
 #if 1
 
     QSqlTableModel *model = new QSqlTableModel(this, db);
-    model->setTable("primal_data");
+    model->setTable("lottery");
     model->setEditStrategy(QSqlTableModel::OnFieldChange);
     model->select();
 
-    //ID, RED_ONE(1), RED_TWO, RED_THREE, RED_FOUR, RED_FIVE(5), RED_SIX, BLUE, INPUT_COUNT,RECORD_DATE(9)
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
-    model->setHeaderData(1, Qt::Horizontal, QObject::tr("RED_ONE"));
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("RED_TWO"));
-    model->setHeaderData(3, Qt::Horizontal, QObject::tr("RED_THREE"));
-    model->setHeaderData(4, Qt::Horizontal, QObject::tr("RED_FOUR"));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("RED_FIVE"));
-    model->setHeaderData(6, Qt::Horizontal, QObject::tr("RED_SIX"));
-    model->setHeaderData(7, Qt::Horizontal, QObject::tr("BLUE"));
-    model->setHeaderData(8, Qt::Horizontal, QObject::tr("INPUT_COUNT"));
-    model->setHeaderData(9, Qt::Horizontal, QObject::tr("RECORD_DATE"));
+    int index = 0;
+    //ID, RED_ONE(1), RED_TWO, RED_THREE, RED_FOUR, RED_FIVE(5), RED_SIX, BLUE,RECORD_DATE(9), CUR_TIME
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("ID"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_ONE"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_TWO"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_THREE"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_FOUR"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_FIVE"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RED_SIX"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("BLUE"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("RECORD_DATE"));
+    model->setHeaderData(index++, Qt::Horizontal, QObject::tr("CUR_TIME"));
 
     QTableView *view = new QTableView;
     view->setModel(model);
@@ -561,16 +740,16 @@ void MainWindow::on_primalQueryButton_clicked()
 
     QString selectStr;
     if(ui->checkBox->isChecked())
-        selectStr = QString("select * from primal_data where RECORD_DATE >='%1' AND RECORD_DATE <='%2'").arg(startDate).arg(endDate);
+        selectStr = QString("select * from lottery where RECORD_DATE >='%1' AND RECORD_DATE <='%2'").arg(startDate).arg(endDate);
     else
-        selectStr = QString("select * from primal_data where RECORD_DATE ='%1'").arg(startDate);
+        selectStr = QString("select * from lottery where RECORD_DATE ='%1'").arg(startDate);
 
     QSqlQuery query(selectStr);
 
     int row_count = 0;
     int red_one, red_two, red_three, red_four, red_five, red_six, blue = 0;
 
-    //ID, RED_ONE(1), RED_TWO, RED_THREE, RED_FOUR, RED_FIVE, RED_SIX, BLUE(7), INPUT_COUNT, RECORD_DATE(9)
+    //ID, RED_ONE(1), RED_TWO, RED_THREE, RED_FOUR, RED_FIVE, RED_SIX, BLUE(7), RECORD_DATE(8), CUR_TIME
     while (query.next()) {
 
         red_one     = query.value(1).toInt();
@@ -591,7 +770,6 @@ void MainWindow::on_primalQueryButton_clicked()
             mesbox.exec();
             return;
         }
-
 
         red_count[red_one - 1] += 1;
         red_count[red_two - 1] += 1;
@@ -618,4 +796,74 @@ void MainWindow::on_primalQueryButton_clicked()
 #endif
 
 
+}
+
+
+void MainWindow::on_primalImportButton_clicked()
+{
+
+
+
+}
+
+void MainWindow::on_lineEditRed1_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed1->text().length())
+    {
+        on_lineEditRed1_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEditRed2_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed2->text().length())
+    {
+        on_lineEditRed2_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEditRed3_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed3->text().length())
+    {
+        on_lineEditRed3_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEditRed4_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed4->text().length())
+    {
+        on_lineEditRed4_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEditRed5_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed5->text().length())
+    {
+        on_lineEditRed5_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEditRed6_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed6->text().length())
+    {
+        on_lineEditRed6_returnPressed();
+    }
+}
+
+void MainWindow::on_lineEdit_2_textEdited(const QString &arg1)
+{
+    if (2 == ui->lineEditRed1->text().length() &&
+            2 == ui->lineEditRed2->text().length() &&
+            2 == ui->lineEditRed3->text().length() &&
+            2 == ui->lineEditRed4->text().length() &&
+            2 == ui->lineEditRed5->text().length() &&
+            2 == ui->lineEditRed6->text().length() &&
+            2 == ui->lineEdit_2->text().length())
+    {
+        on_lineEdit_2_returnPressed();
+    }
 }

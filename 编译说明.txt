@@ -1,0 +1,25 @@
+enigmavbQT打包工具：使用方法 生成的程序运行正常之后，找到项目的生成目录，比如 项目源码路径：C:\QtPros\hellomw\ 。 它的项目生成目录是 C:\QtPros\build-hellomw-Desktop_Qt_5_4_0_MinGW_32bit-Release\ 。 进入这个文件夹，在进入它的子文件夹 release 里面，找到 hellomw.exe，将这个exe 复制到一个新的单独的文件夹里用于发布，比如存到 D:\hellomw\ 文件夹里面。
+
+然后从开始菜单打开 Qt 命令行，输入命令：cd /d D:\hellomw 然后使用 windeployqt 工具命令：windeployqt hellomw.exe
+
+参考网址：https://blog.csdn.net/windsnow1/article/details/78004265/
+
+QT
+Password requirements Minimum 7 characters Cannot contain your email address or name Must include at least three of these four types: lowercase letters, uppercase letters, digits, symbols Accepted characters: a-z, A-Z, 0-9, space and symbols !"#/()=?@${[]},.-_<>|;:'*^~+ notice : Hg .... 9;
+
+QT安装流程 https://www.cnblogs.com/chenmingjun/p/8392713.html
+
+http://download.qt.io/archive/qt/5.10/5.10.1/
+
+qt编程的步骤，然后再仔细说一下qmake的使用。我看书上的都是编写好cpp文件后，分别执行命令: qmake -project、qmake、make，然后执行就可以了，
+
+PNG 转 ICO
+https://lirongyao.com/ico/
+
+QML程序打包发布（解决QML打包后不能启动的问题）
+命令：windeployqt xxx.exe -qmldir C:\Qt\Qt5.10.1\5.10.1\mingw53_32\qml 上述指令会将Qt5Core.dll，Qt5Sql.dll，libeay32.dll，ssleay32.dll 这几个文件需要单独复制到发布目录。
+
+github在线浏览工具 Sourcegraph
+
+然后用 Enigma Virtual Box 打包
+

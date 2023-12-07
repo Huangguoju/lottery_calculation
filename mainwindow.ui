@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>双色球计算工具</string>
+   <string>概率计算工具</string>
   </property>
   <property name="windowIcon">
    <iconset resource="picture.qrc">
@@ -21,21 +21,32 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEditRed1">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>141</width>
-      <height>21</height>
+      <x>90</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
     </property>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>100</y>
+      <y>110</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -497,7 +508,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>170</y>
+      <y>180</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -959,7 +970,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>130</y>
       <width>54</width>
       <height>41</height>
      </rect>
@@ -972,7 +983,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>230</y>
+      <y>240</y>
       <width>54</width>
       <height>41</height>
      </rect>
@@ -985,7 +996,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>250</y>
+      <y>260</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -1447,7 +1458,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>70</y>
+      <y>80</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -1909,7 +1920,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>140</y>
+      <y>150</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -2371,7 +2382,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>220</y>
+      <y>230</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -2833,7 +2844,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>200</y>
+      <y>210</y>
       <width>601</width>
       <height>20</height>
      </rect>
@@ -2845,8 +2856,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>10</y>
+      <x>190</x>
+      <y>0</y>
       <width>54</width>
       <height>41</height>
      </rect>
@@ -2858,18 +2869,29 @@
    <widget class="QLineEdit" name="lineEdit_2">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>20</y>
-      <width>141</width>
-      <height>21</height>
+      <x>360</x>
+      <y>30</y>
+      <width>41</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>10</y>
+      <x>360</x>
+      <y>0</y>
       <width>54</width>
       <height>41</height>
      </rect>
@@ -2882,8 +2904,8 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>310</y>
-      <width>224</width>
+      <y>330</y>
+      <width>331</width>
       <height>31</height>
      </rect>
     </property>
@@ -2903,7 +2925,7 @@
         </size>
        </property>
        <property name="text">
-        <string>上一次输入的数字：</string>
+        <string>上一次输入的组：</string>
        </property>
        <property name="textFormat">
         <enum>Qt::AutoText</enum>
@@ -2914,7 +2936,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_last_num">
+      <widget class="QLabel" name="label_last_red1">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -2939,7 +2961,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_last_num_2">
+      <widget class="QLabel" name="label_last_red2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -2953,7 +2975,157 @@
         </size>
        </property>
        <property name="text">
-        <string>（红球）</string>
+        <string>0</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_red3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_red4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_red5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_red6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_num_sep">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_last_blue">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>99999</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
        </property>
        <property name="textFormat">
         <enum>Qt::AutoText</enum>
@@ -2965,28 +3137,11 @@
      </item>
     </layout>
    </widget>
-   <widget class="QCommandLinkButton" name="revocationButton">
+   <widget class="QComboBox" name="comboBoxMachineOrWin">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>310</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>撤销</string>
-    </property>
-    <property name="icon">
-     <iconset resource="picture.qrc">
-      <normaloff>:/new/prefix1/return.ico</normaloff>:/new/prefix1/return.ico</iconset>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>20</y>
+      <x>670</x>
+      <y>30</y>
       <width>121</width>
       <height>22</height>
      </rect>
@@ -3015,73 +3170,11 @@
      <string>重新初始化</string>
     </property>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_8">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>310</y>
-      <width>224</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_9">
-     <item>
-      <widget class="QLabel" name="label_blue12_4">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>99999</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>已经输入次数：       </string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::AutoText</enum>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_last_num_3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>99999</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::AutoText</enum>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_9">
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>340</y>
+      <y>350</y>
       <width>224</width>
       <height>31</height>
      </rect>
@@ -3138,42 +3231,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>60</y>
-      <width>41</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>期数：</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>60</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="saveDataButton">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>130</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>保存数据</string>
-    </property>
    </widget>
    <widget class="QPushButton" name="queryDataButton">
     <property name="geometry">
@@ -3557,6 +3614,96 @@
     </property>
     <property name="text">
      <string>以源数据的方式查询</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditRed2">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditRed3">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditRed4">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditRed5">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditRed6">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>30</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="maxLength">
+     <number>2</number>
     </property>
    </widget>
   </widget>
